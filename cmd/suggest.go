@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"example.com/cmtr/internal/git"
+	"example.com/cmtr/internal/ollama"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +28,12 @@ to quickly create a Cobra application.`,
 			return
 		}
 
-		fmt.Println(diff)
+		message, err := ollama.GetMessage(diff)
+		if err != nil {
+			fmt.Println("Error getting message:", err)
+			return
+		}
+
 	},
 }
 
