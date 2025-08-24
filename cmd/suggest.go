@@ -6,6 +6,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/fatih/color"
+
 	"example.com/cmtr/internal/git"
 	"example.com/cmtr/internal/ollama"
 	"github.com/spf13/cobra"
@@ -14,13 +16,8 @@ import (
 // suggestCmd represents the suggest command
 var suggestCmd = &cobra.Command{
 	Use:   "suggest",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Suggest a commit message for the current diff",
+	Long: `Suggest a commit message for the current diff`,
 	Run: func(cmd *cobra.Command, args []string) {
 		diff, err := git.GetDiff()
 		if err != nil {
@@ -28,11 +25,42 @@ to quickly create a Cobra application.`,
 			return
 		}
 
-		message, err := ollama.GetMessage(diff)
-		if err != nil {
-			fmt.Println("Error getting message:", err)
-			return
+		for {
+
+			message, err := ollama.GetMessage(diff)
+			if err != nil {
+				fmt.Println("Error getting message:", err)
+				return
+			}
+
+			color.Cyan("\nCommit message: %s", message)
+
+			fmt.Println("\nWould you like to commit using this message?")
+			color.Green("1. Yes")
+			color.Yellow("2. Try again")
+			color.Red("3. Cancel")
+
+			var choice int
+			fmt.Print("\nEnter your choice: ")
+			fmt.Scanln(&choice)
+
+			if choice == 1 {
+				message, err := git.Commit(message)
+				fmt.Println("Committed with message:", message)
+				if err != nil {
+					fmt.Println("Error committing:", err)
+					return
+				}
+				fmt.Println("Committed with message:", message)
+				return
+			} else if choice == 2 {
+				continue
+			} else if choice == 3 {
+				return
+			}
+			
 		}
+
 
 	},
 }
