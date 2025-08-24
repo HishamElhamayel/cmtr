@@ -23,18 +23,24 @@ func GetMessage(diff string) (string,error){
 	prompt := `
 	You are a helpful assistant that can help with generating a git commit message.
 	You are given a diff of a codebase and you need to generate a commit message for the changes.
-	You need to generate a commit message for the changes.
-
-	<diff>
-	` + diff + `
-	</diff>
-
+	diffs are in the format of a git diff command.
+	The message has to be short and concise.
+	The message has to be in the present tense.
 	The output should be a single line with the generated commit message.
 	Do not include any other text in the output.
+
+
+	Here is the diff of the changes:
+
+	<diff>
+
+	` + diff + `
+
+	</diff>
 	`
 
 	requestBody := map[string]interface{}{
-		"model": "gemma3:4b-it-qat",
+		"model": "llama3.1:8b",
 		"prompt": prompt,
 		"stream": false,
 		"format": map[string]interface{}{

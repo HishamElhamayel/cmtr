@@ -5,7 +5,7 @@ import (
 )
 
 func Commit(message string) (string, error) {
-	cmd := exec.Command("git", "commit", "-m", `"`+message+`"`)
+	cmd := exec.Command("git", "commit", "-m", message)
 
 	output, err := cmd.Output()
 	if err != nil {

@@ -26,7 +26,6 @@ var suggestCmd = &cobra.Command{
 		}
 
 		for {
-
 			message, err := ollama.GetMessage(diff)
 			if err != nil {
 				fmt.Println("Error getting message:", err)
@@ -51,7 +50,6 @@ var suggestCmd = &cobra.Command{
 					fmt.Println("Error committing:", err)
 					return
 				}
-				fmt.Println("Committed with message:", message)
 				return
 			} else if choice == 2 {
 				continue
